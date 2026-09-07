@@ -1,0 +1,6 @@
+capstone==5.0.7
+pefile==2024.8.26
+PyNaCl==1.6.2
+cffi==2.0.0
+pycparser==3.0
+pyinstaller==6.17.0
