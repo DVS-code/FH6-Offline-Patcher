@@ -9,6 +9,12 @@ from engine import VERSION, patch
 from static_container import ContainerError
 
 
+def license_text():
+    directory = Path(__file__).with_name("THIRD_PARTY_NOTICES")
+    files = sorted(p for p in directory.iterdir() if p.is_file())
+    return "\n\n".join(p.name + "\n\n" + p.read_text(encoding="utf-8", errors="replace") for p in files)
+
+
 def gui():
     import tkinter as tk
     from tkinter import filedialog, messagebox, ttk
@@ -46,7 +52,7 @@ def gui():
         button = ttk.Button(row, text="Browse…", command=lambda k=key: browse(k))
         button.pack(side="right", padx=(8, 0))
         controls.extend((entry, button))
-    ttk.Label(frame, text="Supported patterns are discovered and checked in your files. Changed or\nambiguous patterns are refused. Newer builds have not yet been game-tested.").pack(anchor="w", pady=(0, 12))
+    ttk.Label(frame, text="Original files are preserved. The patched EXE is written to a new folder.").pack(anchor="w", pady=(0, 12))
     status = tk.StringVar(value="Select a clean EXE to begin.")
     ttk.Label(frame, textvariable=status, wraplength=700).pack(anchor="w", fill="x", pady=(0, 8))
     bar = ttk.Progressbar(frame, mode="indeterminate")
@@ -86,6 +92,18 @@ def gui():
     cancel_button = ttk.Button(row, text="Cancel", command=cancel.set, state="disabled")
     cancel_button.pack(side="left", padx=(8, 0))
 
+    def show_licenses():
+        from tkinter.scrolledtext import ScrolledText
+        window = tk.Toplevel(root)
+        window.title("Third-party licenses")
+        window.geometry("760x520")
+        text = ScrolledText(window, wrap="word", padx=12, pady=12)
+        text.pack(fill="both", expand=True)
+        text.insert("1.0", license_text())
+        text.configure(state="disabled")
+
+    ttk.Button(row, text="Licenses", command=show_licenses).pack(side="right")
+
     def poll():
         nonlocal working
         try:
@@ -123,8 +141,12 @@ def main(argv=None):
     parser.add_argument("--game-dir", type=Path, help="Directory containing matching original support files (default: EXE folder)")
     parser.add_argument("--out-dir", type=Path, help="New output directory; existing paths are never overwritten")
     parser.add_argument("--gui", action="store_true", help="Open the file-selection window")
+    parser.add_argument("--licenses", action="store_true", help="Show bundled third-party license notices")
     parser.add_argument("--version", action="version", version=f"FH6 Offline Patcher {VERSION}")
     args = parser.parse_args(argv)
+    if args.licenses:
+        print(license_text())
+        return 0
     if args.gui or (args.exe is None and args.game_dir is None and args.out_dir is None):
         return gui()
     if args.exe is None or args.out_dir is None:

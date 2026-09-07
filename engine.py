@@ -17,7 +17,7 @@ from static_container import ContainerError, open_container
 from static_image import Image, discover_xor_codec
 from static_semantics import discover_embedded_container_name, exception_records
 
-VERSION = "0.1.0-rc3"
+VERSION = "V1"
 
 
 @contextmanager
