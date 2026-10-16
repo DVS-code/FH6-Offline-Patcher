@@ -1,4 +1,4 @@
-# FH6 Offline Patcher V1
+# FH6 Offline Patcher V2
 
 Create a patched Forza Horizon 6 EXE from your original game files offline.
 
@@ -33,5 +33,5 @@ Use Python 3.11 on Windows x64. From the source folder:
 
 ```powershell
 python -m pip install -r requirements-build.txt
-python build_release.py --out-dir "V1"
+python build_release.py --out-dir "V2"
 ```
